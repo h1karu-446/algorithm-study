@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int* InsertionSort(int A[], int N, int print = 0){
+void InsertionSort(int A[], int N, int print = 0){
     int i, j, v;
     for (i = 1; i < N; i++){
         v = A[i];
@@ -17,7 +17,6 @@ int* InsertionSort(int A[], int N, int print = 0){
             }
         }
     }
-    return A;
 }
 
 int main(){
