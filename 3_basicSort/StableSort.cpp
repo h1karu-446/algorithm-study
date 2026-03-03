@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include "3_basic"
 
 using namespace std;
 
@@ -10,7 +9,8 @@ struct Card {
 
 void bubbleSort(Card*, int N);
 void selectionSort(Card*, int N);
-bool checkStable(const Card*, const Card*, int N);
+bool checkStable1(const Card*, const Card*, int N);
+bool checkStable2(const Card*, const Card*, int N);
 
 int main(){
     int N;
@@ -35,7 +35,7 @@ int main(){
         cout << CB[i].suit << CB[i].value;
     }
     cout << endl;
-    checkStable(C, CB, N) ? cout << "Stable" << endl : cout << "Not stable" << endl;
+    checkStable1(C, CB, N) ? cout << "Stable" << endl : cout << "Not stable" << endl;
 
     //selectionソートの出力
     for (int i = 0; i < N; i++){
@@ -43,7 +43,7 @@ int main(){
         cout << CS[i].suit << CS[i].value;
     }
     cout << endl;
-    checkStable(C, CS, N) ? cout << "Stable" << endl : cout << "Not stable" << endl;
+    checkStable2(C, CS, N) ? cout << "Stable" << endl : cout << "Not stable" << endl;
 
     return 0;
 }
@@ -86,7 +86,7 @@ void selectionSort(Card *card, int N){
     }
 }
 
-bool checkStable(const Card *Origin, const Card *Sorted, int N){
+bool checkStable1(const Card *Origin, const Card *Sorted, int N){
     for(int i = 0; i < N-1; i++){
         for (int j = i+1; j < N; j++){
             if (Origin[i].value == Origin[j].value){
@@ -103,5 +103,40 @@ bool checkStable(const Card *Origin, const Card *Sorted, int N){
             
         }
     }
+    return true;
+}
+
+bool checkStable2(const Card *Origin, const Card *Sorted, int N){
+    char OriginOrder[11][4];
+    char SortedOrder[11][4];
+    int In[11];
+    for (int i = 1; i < 10; i++){
+        int index = 0;
+        for (int j = 0; j < N; j++){
+            if (Origin[j].value == ('0' + i)){
+                OriginOrder[i][index] = Origin[j].suit;
+                index++;
+            }
+        }
+        In[i] = index;
+    }
+    for (int i = 1; i < 10; i++){
+        int index = 0;
+        for (int j = 0; j < N; j++){
+            if (Sorted[j].value == ('0' + i)){
+                SortedOrder[i][index] = Sorted[j].suit;
+                index++;
+            }
+        }
+    }
+
+    for (int i = 1; i < 10; i++){
+        for (int j = 0; j < In[i]; j++){
+            if (OriginOrder[i][j] != SortedOrder[i][j]){
+                return false;
+            }
+        }
+    }
+    
     return true;
 }
