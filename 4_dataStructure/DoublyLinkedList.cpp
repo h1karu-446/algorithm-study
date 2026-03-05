@@ -3,56 +3,82 @@
 
 using namespace std;
 
-struct list{
-  int key;
-  list* prev = NULL;
-  list* next = NULL;
+struct Node{
+  long long key;
+  Node* next = NULL;
+  Node* prev = NULL;
 };
-list head = {0, &head, &head};
 
-void insert(int value){
-  list *x = (list *)malloc(sizeof(list));
-  x->key = value;
-  x->next = head.next;
-  head.next->prev = x;
-  x->prev = &head;
-  head.next = x;
+Node head;
+
+void init(){
+  head.next = &head;
+  head.prev = &head;
 }
 
-void deleteNode(list* t){
-  t->next->prev = t->prev;
-  t->prev->next = t->next;
-  free(t);
+void insert(long long key){
+  Node* p;
+  p = (Node *)malloc(sizeof(Node));
+  p->key = key;
+  p->next = head.next;
+  head.next->prev = p;
+  p->prev = &head;
+  head.next = p;
 }
 
-void search(int value){
-  for (list* p = head.next; p != &head; p = p->next){
-    if (p->key == value){
-      deleteNode(p);
-      break;
+Node* search(long long key){
+  Node* p;
+  for (p = head.next; p != &head; p = p->next){
+    if (p->key == key){
+      return p;
     }
   }
+  return p;
+}
+
+void delete_ele(Node* ele){
+  if (ele == &head) {
+    cout << "リストは空です" << endl;
+    return ;
+  }
+  ele->prev->next = ele->next;
+  ele->next->prev = ele->prev;
+  free(ele);
 }
 
 void deleteFirst(){
-  deleteNode(head.next);
+  delete_ele(head.next);
 }
 
 void deleteLast(){
-  deleteNode(head.prev);
+  delete_ele(head.prev);
+}
+
+void printNode(){
+  for(Node* p = head.next; p != &head; p = p->next){
+    cout << p->key;
+    cout << (p->next != &head ? " " : "\n");
+  }
 }
 
 int main() {
-  int n, value;
+  int n;
+  long long value;
+  Node* p;
   cin >> n;
   char instruction[20];
+
+  init();
   
   for(int i = 0; i < n; i++){
-    scanf("%s%d", instruction, &value);
+    cin >> instruction;
     if (!strcmp(instruction, "insert")){
+      cin >> value;
       insert(value);
     } else if(!strcmp(instruction, "delete")) {
-      search(value);
+      cin >> value;
+      p = search(value);
+      delete_ele(p);
     } else if (!strcmp(instruction, "deleteFirst")){
       deleteFirst();
     } else if (!strcmp(instruction, "deleteLast")){
@@ -62,13 +88,7 @@ int main() {
     }
   }
 
-  for(list* p = head.next; p != &head; p = p->next){
-    if (p->next == &head){
-      cout << p->key << endl;
-      break;
-    }
-    cout << p->key << " ";
-  }
+  printNode();
 
   return 0;
 }
