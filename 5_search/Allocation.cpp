@@ -34,7 +34,7 @@ int main(){
     int mid = (left + right) / 2;
 
     if(check(mid) == n){ //nなら全ての荷物が仮定のP(つまりmid)で積むことができる
-      right = mid; //より小さいPで探索する
+      right = mid; //より小さい範囲で最小のPを探索する
     }else{
       left = mid + 1;
     }
