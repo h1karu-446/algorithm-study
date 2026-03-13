@@ -6,17 +6,17 @@ using namespace std;
 vector<int> A;
 
 int partition(int p, int r){
-  int pibot, x = A[r], i, j, t;
+  int x = A[r], i, j, t;
   for (i = p-1, j = p; j < r; j++){
     if (A[j] <= x){
       i++;
       t = A[i]; A[i] = A[j]; A[j] = t;
     }
   }
-  pibot = ++i;
+  i++;
   A[r] = A[i];
   A[i] = x;
-  return pibot;
+  return i;
 }
 
 int main(){
