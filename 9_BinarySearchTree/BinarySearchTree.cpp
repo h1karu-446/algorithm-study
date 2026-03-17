@@ -12,22 +12,22 @@ struct Node {
 Node *root, *NIL;  //静的記憶領域を持つ変数はゼロ(NULL)に初期化されるからこれでroot == NIL == NULLになってる。
 
 void insert(int key){
-  Node *searcher, *parent, *self;
+  Node *current, *parent, *self;
 
   self = (Node *)malloc(sizeof(Node));
   self->key = key;
   self->left = NIL;
   self->right = NIL;
 
-  searcher = root;
+  current = root;
   parent = NIL;
 
-  while(searcher != NIL){
-    parent = searcher; //親を設定
+  while(current != NIL){
+    parent = current; //親を設定
     if (parent->key > self->key){
-      searcher = parent->left;
+      current = parent->left;
     } else {
-      searcher = parent->right;
+      current = parent->right;
     }
   }
 
@@ -41,6 +41,20 @@ void insert(int key){
       parent->right = self;
     }
   }
+}
+
+Node* find(int key){
+  Node *current;
+
+  current = root;
+  while(current != NIL && current->key != key){
+    if (current->key > key){
+      current = current->left;
+    } else {
+      current = current->right;
+    }
+  }
+  return current;
 }
 
 void inOrder(Node *u){
@@ -74,6 +88,13 @@ int main(){
     if (command == "insert"){
       cin >> k;
       insert(k);
+    } else if (command == "find"){
+      cin >> k;
+      if (find(k) == NIL){
+        cout << "no" << endl;
+      } else {
+        cout << "yes" << endl;
+      }
     } else if (command == "print"){
       print();
     }
