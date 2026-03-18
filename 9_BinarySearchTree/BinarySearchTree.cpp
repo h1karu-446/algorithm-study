@@ -78,6 +78,69 @@ void print(){
   cout << endl;
 }
 
+Node *getMinimum(Node *N){
+  while(N->left != NIL){
+    N = N->left;
+  }
+  return N;
+}
+
+Node *getSuccessor(Node* N){
+  // Nに右の子があるなら右部分木で一番小さい(左にある)ノードが次ノード (deleteNode()ではこのif文は絶対にtrue)
+  if (N->right != NIL){
+    return getMinimum(N->right);
+  }
+  
+  // Nに右の子がない場合、親を辿る必要がある
+  Node *p = N->parent;
+
+  // 自分が「親の左の子」になっている最初の祖先が、次のノードになる
+  // もしそのような祖先が存在しない場合（自分が最も右のノード）は、次ノードはNIL
+  while(p != NIL && N == p->right){
+    N = p;
+    p = p->parent;
+  }
+  return p;
+}
+
+void deleteNode(int key){
+  Node *target; //削除したいkeyを持つノード
+  Node *y; //実際に削除されるノード
+  Node *child;  //yの子
+
+  target = find(key);  //対象のノードを見つける
+  if (target == NIL) return;
+
+  if(target->left != NIL && target->right != NIL){  //対象のノードが2つ子を持つとき  
+    y = getSuccessor(target); //右の子を持つのでNILが返ることはない
+  } else {
+    y = target;
+  }
+
+  if (y->left != NIL){ 
+    child = y->left;
+  } else {
+    child = y->right;
+  }
+
+  if(y->parent == NIL){ //消すノードがrootの時
+    root = child;
+  } else if (y == y->parent->left){
+    y->parent->left = child;
+  } else {
+    y->parent->right = child;
+  }
+
+  if (child != NIL){
+    child->parent = y->parent;
+  }
+
+  if (y != target) { //2つ子を持つ時、keyを上書きしてちゃんと消したいkeyを持つノードを消す
+    target->key = y->key;
+  }
+}
+
+
 int main(){
   int m, k;
   string command;
@@ -95,6 +158,9 @@ int main(){
       } else {
         cout << "yes" << endl;
       }
+    } else if (command == "delete"){
+      cin >> k;
+      deleteNode(k);
     } else if (command == "print"){
       print();
     }
