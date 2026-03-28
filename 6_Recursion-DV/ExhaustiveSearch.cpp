@@ -13,7 +13,7 @@ bool solve(int i, int m){
     return false;
   }
   
-  // ||の左側はi番目の要素を使う組み合わせを探索。右側は、i番目の要素を使う組み合わせの探索
+  // ||の左側はi番目の要素を使わない組み合わせを探索。右側は、i番目の要素を使う組み合わせの探索
   bool res = solve(i+1, m) || solve(i+1, m-A[i]); 
   return res;
 }
